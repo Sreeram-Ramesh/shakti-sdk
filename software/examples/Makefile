@@ -280,6 +280,9 @@ else
 ifeq ($(PROGRAM),interrupt_demo)
 filepath := plic_applns/interrupt_demo
 else
+ifeq ($(PROGRAM),uart01_interrupt_test)
+filepath := plic_applns/uart01_interrupt_test
+else
 ifeq ($(PROGRAM),switches)
 filepath := gpio_applns/switches
 else
@@ -321,7 +324,8 @@ endif
 endif
 endif
 endif
-endif	
+endif
+endif
 endif
 endif
 endif
