@@ -31,6 +31,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdint.h>
 #include "platform.h"
 
+#define USE_INTERRUPT 1 //Uncomment or add this line when interrupts are unused
+#define USE_RX_THRESHOLD 1 //uncomment or add this line when rx_threshold is required
+
+
 /* Struct to access UART registers as 32 bit registers */
 typedef struct
 {
