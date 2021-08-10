@@ -316,7 +316,15 @@ else
 ifeq ($(PROGRAM),ping_res)
 filepath := eth_test/ping_res
 else
+ifeq ($(PROGRAM),lora_receive)
+filepath := uart_applns/lora
+else
+ifeq ($(PROGRAM),lora_transmit)
+filepath := uart_applns/lora
+else
 	@echo "Entry for $(PROGRAM) not present"
+endif
+endif
 endif
 endif
 endif
