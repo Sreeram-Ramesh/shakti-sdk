@@ -21,13 +21,13 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ***************************************************************************/
-/**
+/*
   * @file lora_receive.c
   * @brief sample program used to recive the word "HELLO" wirelessly
   * @details It used to recive the required data wirelessly
 
   * * Prerequisite:-	
-  * 1. Lora module is configured to baud rate 115200
+  * 1. Lora module is configured to baud rate 9600
   * 2. Lora module is set to Active Mode
   * 3. Lora module set Baud Rate to 865000000 Hz
   * 4. Lora module set the address to 0
@@ -120,13 +120,6 @@ void check_set_lora_value()
 {
 	char data[LENGTH];
 
-	// memset(data, 0, LENGTH); //Used to clear the character array
-	// flush_uart(LORA_UART);
-	// printf("\n Writing AT+RESET");
-	// write_to_lora("AT+RESET");
-	// read_from_lora(data);
-	// printf("\n Data from LORA module: %s", data);
-
 	memset(data, 0, LENGTH);
 	flush_uart(LORA_UART);
 	printf("\n Finding the Mode set for LORA module");
@@ -158,7 +151,14 @@ void setup_lora()
 {
 	char data[LENGTH];
 
-	memset(data, 0, LENGTH); //Used to clear the character array
+	// memset(data, 0, LENGTH);
+	// flush_uart(LORA_UART);
+	// printf("\n Writing AT+RESET");
+	// write_to_lora("AT+RESET");
+	// read_from_lora(data);
+	// printf("\n Data from LORA module: %s", data);
+
+	memset(data, 0, LENGTH);
 	flush_uart(LORA_UART);
 	printf("\n Writing AT");
 	write_to_lora("AT");

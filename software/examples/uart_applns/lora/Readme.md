@@ -19,9 +19,9 @@ To transmit a data or a message to the specified address set for Lora module.<br
 For example:<br>
 - AT+SEND=0,5,Hello<br>
 - AT+SEND=[Address],[Payload_Length],[Data]<br>
-- [Address]0~65535, When the [Address] is 0, it will    send data to all address (From 0 to 65535.)<br>
-- [Payload_Length] Maximum 240bytes<br>
-- [Data] ASCII Format
+    - [Address]0~65535, When the [Address] is 0, it will    send data to all address (From 0 to 65535.)<br>
+    - [Payload_Length] Maximum 240bytes<br>
+    - [Data] ASCII Format
 
 ## The work mechanism of the LORA receive
 Set the address to the LORA mode for transmit address to 0
