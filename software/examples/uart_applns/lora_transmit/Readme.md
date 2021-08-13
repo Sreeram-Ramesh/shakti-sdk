@@ -1,11 +1,4 @@
 
-# Details description of the Lora Module work
-
-The two different code:
-* lora_transmit.c
-* lora_receive.c
-
-
 ## Setup the LORA module
  * AT ==> response +OK
  * AT+MODE = 0  ==> response +OK
@@ -22,9 +15,3 @@ For example:<br>
     - [Address]0~65535, When the [Address] is 0, it will    send data to all address (From 0 to 65535.)<br>
     - [Payload_Length] Maximum 240bytes<br>
     - [Data] ASCII Format
-
-## The work mechanism of the LORA receive
-Set the address to the LORA mode for transmit address to 0
- * AT+ADDRESS = 0  ==> response +OK
-
-To receive the message or data you just have to read the value from the LORA

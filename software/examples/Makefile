@@ -256,9 +256,6 @@ else
 ifeq ($(PROGRAM),spiread)
 filepath := spi_applns/spiread
 else
-ifeq ($(PROGRAM),spi)
-filepath := spi_applns/spi
-else
 ifeq ($(PROGRAM),w25q32_write)
 filepath := spi_applns/w25q32_write
 else
@@ -317,13 +314,12 @@ ifeq ($(PROGRAM),ping_res)
 filepath := eth_test/ping_res
 else
 ifeq ($(PROGRAM),lora_receive)
-filepath := uart_applns/lora
+filepath := uart_applns/lora_receive
 else
 ifeq ($(PROGRAM),lora_transmit)
-filepath := uart_applns/lora
+filepath := uart_applns/lora_transmit
 else
 	@echo "Entry for $(PROGRAM) not present"
-endif
 endif
 endif
 endif
