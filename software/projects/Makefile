@@ -91,7 +91,7 @@ ifeq ($(TARGET),parashu)  # e-class 100t rv32imac
 	@$(eval FLAGS = -D parashu )
 	@$(eval MARCH=rv32imac)
 	@$(eval MABI=ilp32)
-	@$(eval UPLOADER = $(UPLOADER)/spansion)
+	@$(eval UPLOADER = $(UPLOADDIR)/spansion)
 	@$(eval INTERFACE=$(bspboard)/ftdi)
 	@$(eval DC=$(FLAGS) $(D))
 else
@@ -102,7 +102,7 @@ ifeq ($(TARGET),vajra)  # c-class 100t rv64imacsu
 	@$(eval FLAGS = -D vajra )
 	@$(eval MARCH=rv64imac)
 	@$(eval MABI=lp64)
-	@$(eval UPLODER= $(UPLOADER)/spansion)
+	@$(eval UPLOADER= $(UPLOADDIR)/spansion)
 	@$(eval INTERFACE = $(bspboard)/ftdi)
 	@$(eval DC=$(FLAGS) $(D))
 else
@@ -142,7 +142,10 @@ do:
 ifeq ($(PROGRAM),all)
 	cd ./intruder_detection && $(MAKE) all TARGET=$(TARGET)
 	cd ./flash_gpio && $(MAKE) all TARGET=$(TARGET)
-else
+	cd ./irrigationsystem && $(MAKE) all TARGET=$(TARGET)
+	cd ./weatherstation && $(MAKE) all TARGET=$(TARGET)
+	cd ./weatherstation_bmp280 && $(MAKE) all TARGET=$(TARGET)
+else 
 ifeq ($(PROGRAM),intruder_detection)
 filepath := ./intruder_detection
 else
