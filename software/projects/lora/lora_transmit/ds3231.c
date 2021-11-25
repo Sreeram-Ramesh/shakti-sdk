@@ -200,7 +200,7 @@ const char* values()
 		read_ds3231_registers(I2C, DS3231_REG_OFFSET, &read_buf[0], 7, 800);
 		
 		// log_info("\n Date: %x-%x-20%x Day: ", read_buf[4], read_buf[5], read_buf[6]);
-		sprintf(sending_data, "AT+SEND=2,4,%x-%x-20%x", read_buf[4], read_buf[5], read_buf[6]);
+		sprintf(sending_data, "AT+SEND=2,20,%x-%x-20%x", read_buf[4], read_buf[5], read_buf[6]);
 		
 		switch(read_buf[3])
 		{

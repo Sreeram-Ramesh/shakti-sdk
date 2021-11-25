@@ -106,14 +106,15 @@ void send_data(char *values)
 {
 	char data[LENGTH];
 
-	log_info("The Value %s", values);
+	printf("The Value %s", values);
 
-	// memset(data, 0, LENGTH);
-	// flush_uart(LORA_UART);
-	// printf("\n Sending DATA from");
-	// write_to_lora("AT+SEND=0,5,Hello");
-	// read_from_lora(data);
-	// printf("\n Data from LORA module: %s", data);
+	memset(data, 0, LENGTH);
+	flush_uart(LORA_UART);
+	printf("\n Sending DATA from");
+	write_to_lora("AT+SEND=0,5,Hello");
+	// write_to_lora(values);
+	read_from_lora(data);
+	printf("\n Data from LORA module: %s", data);
 }
 
 
@@ -209,5 +210,5 @@ void main()
 	// check_set_lora_value();
 	
 	send_data(values());
-	printf("%s", values());
+	// printf("%s", values());
 }
