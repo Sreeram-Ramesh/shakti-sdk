@@ -203,10 +203,16 @@ void main()
 	set_baud_rate(LORA_UART, BAUDRATE);
 
 	/* To setup the LORA Module */
-	setup_lora();
+	// setup_lora();
 
 	/* If you want to check that value is set correctly or not */
-	check_set_lora_value();
+	// check_set_lora_value();
 
-	receive_data();
+	/* Receiving Data */
+	while (1) 
+	{
+		receive_data();
+		delay_loop(1000, 1000);
+	}
+	
 }

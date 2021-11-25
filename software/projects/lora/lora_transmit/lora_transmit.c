@@ -111,8 +111,8 @@ void send_data(char *values)
 	memset(data, 0, LENGTH);
 	flush_uart(LORA_UART);
 	printf("\n Sending DATA from");
-	write_to_lora("AT+SEND=0,5,Hello");
-	// write_to_lora(values);
+	// write_to_lora("AT+SEND=0,5,Hello");
+	write_to_lora(values);
 	read_from_lora(data);
 	printf("\n Data from LORA module: %s", data);
 }
@@ -196,7 +196,6 @@ void setup_lora()
  */
 void main()
 {
-	// char check[20];
 	printf("\n Setting PIN MUX config to 2 ...... \n");
 	*pinmux_config_reg = 0x5;
 
@@ -209,14 +208,14 @@ void main()
 	/* If you want to check that value is set correctly or not.*/
 	// check_set_lora_value();
 	
-	send_data(values());
+	// send_data(values());
 	// printf("%s", values());
 
 	/* Sending Values consequtively */
-	// while (1)
-	// {
-	// 	send_data(values());
-	// 	delay_loop(1000,1000);
-	// }
+	while (1)
+	{
+		send_data(values());
+		delay_loop(1500,1500);
+	}
 	
 }
