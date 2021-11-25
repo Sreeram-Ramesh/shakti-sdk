@@ -102,16 +102,18 @@ void write_to_lora(char *data)
  * @brief It helps to send the required data or message to another LORA module
  * @details Through AT commands the message can be send from one LORA to another LORA module.
  */
-void send_data()
+void send_data(char *values)
 {
 	char data[LENGTH];
 
-	memset(data, 0, LENGTH);
-	flush_uart(LORA_UART);
-	printf("\n Sending DATA from");
-	write_to_lora("AT+SEND=0,5,Hello");
-	read_from_lora(data);
-	printf("\n Data from LORA module: %s", data);
+	log_info("The Value %s", values);
+
+	// memset(data, 0, LENGTH);
+	// flush_uart(LORA_UART);
+	// printf("\n Sending DATA from");
+	// write_to_lora("AT+SEND=0,5,Hello");
+	// read_from_lora(data);
+	// printf("\n Data from LORA module: %s", data);
 }
 
 
@@ -206,6 +208,6 @@ void main()
 	/* If you want to check that value is set correctly or not.*/
 	// check_set_lora_value();
 	
-	// send_data();
+	send_data(values());
 	printf("%s", values());
 }
