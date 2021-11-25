@@ -146,6 +146,12 @@ ifeq ($(PROGRAM),all)
 	cd ./weatherstation && $(MAKE) all TARGET=$(TARGET)
 	cd ./weatherstation_bmp280 && $(MAKE) all TARGET=$(TARGET)
 else 
+ifeq ($(PROGRAM),lora_transmit)
+filepath := ./lora/lora_transmit
+else
+ifeq ($(PROGRAM),lora_receive)
+filepath := ./lora/lora_receive
+else
 ifeq ($(PROGRAM),intruder_detection)
 filepath := ./intruder_detection
 else
@@ -170,6 +176,8 @@ else
 ifeq ($(PROGRAM),uart-cam)
 filepath := ./uart-cam/ucam
 else
+endif
+endif
 endif
 endif
 endif
