@@ -211,4 +211,12 @@ void main()
 	
 	send_data(values());
 	// printf("%s", values());
+
+	/* Sending Values consequtively */
+	// while (1)
+	// {
+	// 	send_data(values());
+	// 	delay_loop(1000,1000);
+	// }
+	
 }
