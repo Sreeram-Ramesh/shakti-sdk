@@ -153,31 +153,31 @@ unsigned int ds3231_decimal_to_hex(unsigned int decimal)
  */
 const char* values()
 {
-		int timeout;
-		unsigned int tempReadValue = 0;
-		unsigned long delay = 1000;
-		unsigned int write_buf[7] = {0x00}, read_buf[7] = {0x00};
-		unsigned char length;
-		unsigned int hour, minute, second, date, month, year;
-	
-		hour = 11;
-		minute = 46;
-		second = 30;
-	
-		date = 25;
-		month = 01;
-		year = 2020;
-	
-		write_buf[0] = DS3231_DEC_TO_HEX(second); //Seconds
-		write_buf[1] = DS3231_DEC_TO_HEX(minute); //Minutes
-		write_buf[2] = DS3231_DEC_TO_HEX(hour); //Hours
-	
-		write_buf[4] = DS3231_DEC_TO_HEX(date); //Seconds
-		write_buf[5] = DS3231_DEC_TO_HEX(month); //Minutes
-		write_buf[6] = DS3231_DEC_TO_HEX( (year % 100) ); //Hours
-	
-		write_buf[3] = dayofweek(date, month, year) + 1;
-		length = 7;
+	int timeout;
+	unsigned int tempReadValue = 0;
+	unsigned long delay = 1000;
+	unsigned int write_buf[7] = {0x00}, read_buf[7] = {0x00};
+	unsigned char length;
+	unsigned int hour, minute, second, date, month, year;
+
+	hour = 11;
+	minute = 46;
+	second = 30;
+
+	date = 25;
+	month = 01;
+	year = 2020;
+
+	write_buf[0] = DS3231_DEC_TO_HEX(second); //Seconds
+	write_buf[1] = DS3231_DEC_TO_HEX(minute); //Minutes
+	write_buf[2] = DS3231_DEC_TO_HEX(hour); //Hours
+
+	write_buf[4] = DS3231_DEC_TO_HEX(date); //Seconds
+	write_buf[5] = DS3231_DEC_TO_HEX(month); //Minutes
+	write_buf[6] = DS3231_DEC_TO_HEX( (year % 100) ); //Hours
+
+	write_buf[3] = dayofweek(date, month, year) + 1;
+	length = 7;
 	
 //	set_baud_rate(uart_instance[0], 115200);
 	printf("\nHello Welcome to Shakti");
@@ -190,24 +190,22 @@ const char* values()
 		return -1;
 	}
 	else
-		log_info("\tIntilization Happened Fine\n");
+		// log_info("\tIntilization Happened Fine\n");
 #ifdef UPDATE_TIME
 	write_ds3231_registers(I2C, 0x00, &write_buf[0], length, delay);
-			printf("\n Write complete");
+			// printf("\n Write complete");
 #endif
-	while(1)
-	{
-		read_ds3231_registers(I2C, DS3231_REG_OFFSET, &read_buf[0], 7, 800);
-		
-		log_info("\n Date: %x-%x-20%x Day: ", read_buf[4], read_buf[5], read_buf[6]);
 
-		log_info("Time: %x:%x:%x", read_buf[2], read_buf[1], read_buf[0]);
-		sprintf(sending_data, "AT+SEND=0,50, Date: %x-%x-20%x  Time: %x:%x:%x", read_buf[4], read_buf[5], read_buf[6], read_buf[2], read_buf[1], read_buf[0]);
-		// sprintf(sending_data, "%x:%x:%x" , read_buf[2], read_buf[1], read_buf[0]);
-		delay_loop(1000, 1000);		
+	read_ds3231_registers(I2C, DS3231_REG_OFFSET, &read_buf[0], 7, 800);
+	
+	log_info("\n Date: %x-%x-20%x Day: ", read_buf[4], read_buf[5], read_buf[6]);
+	log_info("Time: %x:%x:%x", read_buf[2], read_buf[1], read_buf[0]);
+
+	sprintf(sending_data, "AT+SEND=0,50, Date: %x-%x-20%x  Time: %x:%x:%x", read_buf[4], read_buf[5], read_buf[6], read_buf[2], read_buf[1], read_buf[0]);
+	// sprintf(sending_data, "%x:%x:%x" , read_buf[2], read_buf[1], read_buf[0]);
+	delay_loop(1500, 1500);		
 
 	return sending_data;
-	}
 
 }
 
