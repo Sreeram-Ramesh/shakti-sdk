@@ -41,6 +41,7 @@
 #include "log.h"
 
 // #include "ds3231.c"
+void intermediate(void)
 const char* values();
 
 #define LORA_UART uart_instance[1]
@@ -212,6 +213,9 @@ void main()
 	// printf("%s", values());
 
 	/* Sending Values consequtively */
+
+	intermediate();
+
 	while (1)
 	{
 		send_data(values());
