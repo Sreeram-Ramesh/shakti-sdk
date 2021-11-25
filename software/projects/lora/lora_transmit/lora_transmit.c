@@ -106,7 +106,7 @@ void send_data(char *values)
 {
 	char data[LENGTH];
 
-	printf("The Value %s", values);
+	printf("\nSend DATA: %s", values);
 
 	memset(data, 0, LENGTH);
 	flush_uart(LORA_UART);
@@ -215,7 +215,7 @@ void main()
 	while (1)
 	{
 		send_data(values());
-		delay_loop(1500,1500);
+		delay_loop(3500,3500);
 	}
 	
 }
