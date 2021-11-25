@@ -2,8 +2,8 @@
  * Project           	      : shakti devt board
  * Name of the file	      : ds3231.c
  * Brief Description of file  : reads real time calendar (date & time) over i2c interface.
- * Name of Author             : Kotteeswaran
- * Email ID                   : kottee.1@gmail.com
+ * Name of Author             : Kotteeswaran, Soutrick Roy Chowdhury
+ * Email ID                   : kottee.1@gmail.com, soutrickofficial@gmail.com
 
  Copyright (C) 2019  IIT Madras. All rights reserved.
 
@@ -146,10 +146,9 @@ unsigned int ds3231_decimal_to_hex(unsigned int decimal)
 	return( ((decimal / 10 ) << 4) | (decimal % 10) );
 }
 
-/** @fn void main()
- * @brief Reads and prints the Date and Time information.
- * @details Configures the DS3231 and reads Date and time information and prints the 
- * in decimal
+/** @fn void intermediate()
+ * @brief Do setup for DS3231
+ * @details Configures the DS3231 
  */
 void intermediate(void)
 {
@@ -194,14 +193,19 @@ void intermediate(void)
 #endif
 }
 
+
+/** @fn const char* values()
+ * @brief Configures the DS3231
+ * @details Reads Date and time information and returns the in string
+ */
 const char* values()
 {
 	unsigned int read_buf[7] = {0x00};
 
 	read_ds3231_registers(I2C, DS3231_REG_OFFSET, &read_buf[0], 7, 800);
 	
-	log_info("\n Date: %x-%x-20%x Day: ", read_buf[4], read_buf[5], read_buf[6]);
-	log_info("\nTime: %x:%x:%x", read_buf[2], read_buf[1], read_buf[0]);
+	// log_info("\n Date: %x-%x-20%x Day: ", read_buf[4], read_buf[5], read_buf[6]);
+	// log_info("\n Time: %x:%x:%x", read_buf[2], read_buf[1], read_buf[0]);
 
 	sprintf(sending_data, "AT+SEND=0,50, Date: %x-%x-20%x  Time: %x:%x:%x", read_buf[4], read_buf[5], read_buf[6], read_buf[2], read_buf[1], read_buf[0]);
 	// delay_loop(1500, 1500);		

@@ -41,7 +41,7 @@
 #include "log.h"
 
 // #include "ds3231.c"
-void intermediate(void)
+void intermediate(void);
 const char* values();
 
 #define LORA_UART uart_instance[1]
@@ -107,12 +107,11 @@ void send_data(char *values)
 {
 	char data[LENGTH];
 
-	printf("\nSend DATA: %s", values);
+	printf("\n Send DATA: %s", values);
 
 	memset(data, 0, LENGTH);
 	flush_uart(LORA_UART);
 	printf("\n Sending DATA from");
-	// write_to_lora("AT+SEND=0,5,Hello");
 	write_to_lora(values);
 	read_from_lora(data);
 	printf("\n Data from LORA module: %s", data);
@@ -209,17 +208,15 @@ void main()
 	/* If you want to check that value is set correctly or not.*/
 	// check_set_lora_value();
 	
-	// send_data(values());
-	// printf("%s", values());
 
-	/* Sending Values consequtively */
-
+	/* Used to setup ds3231 */
 	intermediate();
 
+	/* Sending Time and date consequtively */
 	while (1)
 	{
 		send_data(values());
-		delay_loop(3500,3500);
+		delay_loop(1500,1500);
 	}
 	
 }
