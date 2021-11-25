@@ -151,7 +151,7 @@ unsigned int ds3231_decimal_to_hex(unsigned int decimal)
  * @details Configures the DS3231 and reads Date and time information and prints the 
  * in decimal
  */
-void values(void)
+const char* values()
 {
 		int timeout;
 		unsigned int tempReadValue = 0;
@@ -230,5 +230,7 @@ void values(void)
 		delay_loop(1000, 1000);		
 
 	}
+
+	return sending_data;
 }
 

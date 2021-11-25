@@ -41,7 +41,7 @@
 #include "log.h"
 
 // #include "ds3231.c"
-void values(void);
+const char* values();
 
 #define LORA_UART uart_instance[1]
 #define BAUDRATE 9600
@@ -193,6 +193,7 @@ void setup_lora()
  */
 void main()
 {
+	// char check[20];
 	printf("\n Setting PIN MUX config to 2 ...... \n");
 	*pinmux_config_reg = 0x5;
 
@@ -206,5 +207,5 @@ void main()
 	// check_set_lora_value();
 	
 	// send_data();
-	values();
+	printf("%s", values());
 }
