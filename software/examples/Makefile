@@ -192,6 +192,9 @@ else
 ifeq ($(PROGRAM),pwminterrupt)
 filepath := plic_applns/pwminterrupt
 else
+ifeq ($(PROGRAM),endnode)
+filepath := plic_applns/endnode
+else
 ifeq ($(PROGRAM),asm_int)
 filepath := plic_applns/asm_int
 else
@@ -469,6 +472,7 @@ ifeq ($(PROGRAM),mcp4921dac_chk)
 filepath := sspi_applns/mcp4921dac_chk
 else
 	@echo "Entry for $(PROGRAM) not present"
+endif
 endif
 endif
 endif
