@@ -385,6 +385,15 @@ int sspi_receive_data(sspi_struct *sspi_instance, uint16_t *buf_data);
  */
 unsigned int sspi_receive_n_data(sspi_struct *sspi_instance, uint32_t *buf_data, uint8_t buf_length);
 
+/** @fn void sspi_transmit_data(sspi_struct *sspi_instance, uint32_t*buf_data, uint8_t buf_length)
+ * @brief To transmit data on TX data register
+ * @details Transmitting data by writing buf_data on transmit register after checking the TXE bit on Status register.
+ * @param sspi_instance pointer holds the instance of sspi_struct
+ * @param buf_data this pointer holds the buffer data which has to be transmitted 
+ * @param buf_length Holds the length of the buffer data sent
+ */
+void sspi_clear_fifo(sspi_struct *sspi_instance);
+
 /** @fn void sspi_isr()
  * @brief Interrupt service routine for SSPI peripheral
  * @details This functions will be called to ofer interrupt service routine for SSPI0

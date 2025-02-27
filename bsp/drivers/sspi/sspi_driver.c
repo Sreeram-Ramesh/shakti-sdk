@@ -47,7 +47,7 @@ void sspi_init()
     for(int i = 0; i < SSPI_MAX_COUNT; i++)
     {
 		sspi_instance[i] = (sspi_struct*) ( (SSPI0_BASE_ADDRESS + ( i * SSPI_BASE_OFFSET) ) );
-        printf("sspi_instance[%x]: %x", i, sspi_instance[i]);
+        printf("\nsspi_instance[%x]: %x", i, sspi_instance[i]);
     }
 }
 
@@ -511,6 +511,39 @@ int sspi_receive_data(sspi_struct *sspi_instance, uint16_t *buf_data)
 	return SUCCESS;
 }
 
+/** @fn void sspi_transmit_data(sspi_struct *sspi_instance, uint32_t*buf_data, uint8_t buf_length)
+ * @brief To transmit data on TX data register
+ * @details Transmitting data by writing buf_data on transmit register after checking the TXE bit on Status register.
+ * @param sspi_instance pointer holds the instance of sspi_struct
+ * @param buf_data this pointer holds the buffer data which has to be transmitted 
+ * @param buf_length Holds the length of the buffer data sent
+ */
+void sspi_clear_fifo(sspi_struct *sspi_instance)
+{
+    uint8_t temp_data;
+   // sspi_instance->clock_en=SSPI_CLK_EN;
+   // log_info("\nclock enable pin ~~%x",sspi_instance->clock_en);
+    printf("\n spi clear fifo functiom");
+    while(!(sspi_instance -> fifo_status & SPI_TX_EMPTY)) 
+    {  printf(".");
+        // printf("\n tx not empty");
+	    sspi_configure_tx_rx_length(sspi_instance, 8, 8);
+	    sspi_configure_comm_mode(sspi_instance, FULL_DUPLEX );
+	    sspi_enable_txrx(sspi_instance, ENABLE);
+        sspi_notbusy(sspi_instance);
+    }
+//	printf("\n TX Fifo sspi_instance[SSPI1_INSTANCE]->fifo_status: %x", sspi_instance->fifo_status);
+	//printf("\n sspi_instance[SSPI1_INSTANCE]->comm_status: %x", sspi_instance->comm_status);
+
+    while(!(sspi_instance -> fifo_status & SPI_RX_EMPTY))
+    {  printf(",");
+        // printf("\n rx not empty");
+	    temp_data =  sspi_instance->data_rx;				
+    }
+	printf("\n RX FIFO sspi_instance->fifo_status: %x", sspi_instance->fifo_status);
+	printf("\n sspi_instance->comm_status: %x", sspi_instance->comm_status);
+    
+}
 
 
 /** @fn unsigned int sspi_receive_n_data(sspi_struct *sspi_instance, uint32_t *buf_data, uint8_t buf_length)

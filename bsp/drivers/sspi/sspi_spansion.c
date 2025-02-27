@@ -31,7 +31,8 @@
 #include "utils.h"
 
 //#define DISABLE_CS 1
-#define SPI_FULL_DUPLEX 1
+//#define SPI_FULL_DUPLEX 1
+#define SPI_HALF_DUPLEX 1
 //#define SHOW_REG 1
 
 #define SSPI_DRIVER     1
@@ -60,7 +61,7 @@ void flash_init()
 	sspi_configure_pins(sspi_instance[SSPI_INSTANCE], 1, 0 ,  1 , 1);
 	sspi_configure_mas_slv(sspi_instance[SSPI_INSTANCE], SPI_MASTER);
 	sspi_configure_lsb_first(sspi_instance[SSPI_INSTANCE], MSB_FIRST);
-	sspi_configure_tx_setup_time(sspi_instance[SSPI_INSTANCE], 2);
+	sspi_configure_tx_setup_time(sspi_instance[SSPI_INSTANCE], 1);
 //	sspi_configure_tx_hold_time(sspi_instance[SSPI_INSTANCE], 0);
 }
 
@@ -123,12 +124,13 @@ char flash_cmd_read(char command)
 int flash_status_register_read(void)
 {
 	char stat = 0x3;
-
-	while (stat & 0x01)
+	stat = flash_cmd_read(FLASH_READ_SR);
+	//printf("flash status register val %x\n", stat);
+	while (stat & 0x03)
 	{
 		stat = flash_cmd_read(FLASH_READ_SR);
 		log_debug("flash status register val %x\n", stat);
-//		printf("flash status register val %x\n", stat);
+		//printf("flash status register val %x\n", stat);
 	}
 
 	return 0;
@@ -139,10 +141,36 @@ char flash_register_read(char command)
 	char stat = 0x0;
 
 		stat = flash_cmd_read(command);
-		printf("command [%x] read value: %x\n", command, stat);
+		printf("\ncommand [%x] read value: %x\n", command, stat);
 
 	return stat;
 }
+
+
+/**
+ * @fn int flash_cmd_addr(int command, int addr)
+ * @brief Use for sending 8bit of command + 32 bit of address 
+ * @details Useful for function like erase
+ * @warning to move data drom dr register to fifo there must be some data into spi_dr5 
+ * @param int (command (opcode))
+ * @param int (addr (address after the opcode))
+ * @return int
+ */
+char flash_write_bank_register(char command, char value)
+{
+
+	sspi_instance[SSPI_INSTANCE]->data_tx = command;	//Do not shift  command when passing as argument.
+	sspi_instance[SSPI_INSTANCE]->data_tx = value;	//MSB byte of address.
+	sspi_configure_tx_rx_length(sspi_instance[SSPI_INSTANCE], 16, 0);//Tx - 16, Rx - 0;
+	sspi_configure_comm_mode(sspi_instance[SSPI_INSTANCE], SIMPLEX_TX);
+	sspi_enable_txrx(sspi_instance[SSPI_INSTANCE], ENABLE);
+	waitfor(20);
+	sspi_notbusy();
+	log_debug("\n Flash write register is sent");
+	return 1;
+}
+
+
 
 /**
  * @fn int flash_cmd_addr(int command, int addr)
@@ -201,7 +229,7 @@ void flash_erase(int address)
 	sspi_enable_txrx(sspi_instance[SSPI_INSTANCE], DISABLE);
 #endif
 	flash_write_enable();
-	flash_cmd_addr(0xdc, address);
+	flash_cmd_addr(FLASH_ERASE_COMMAND, address);
 	flash_status_register_read();
 	log_debug("\n Flash erase is done");
 }
@@ -299,12 +327,14 @@ int flash_read(int address)
 	sspi_read_registers(sspi_instance[SSPI_INSTANCE]);
 #endif	
 	sspi_notbusy();
+#ifdef SPI_FULL_DUPLEX
 	read_data[0] = sspi_instance[SSPI_INSTANCE]->data_rx; //Full Duplex Dummy read
 	read_data[0] = sspi_instance[SSPI_INSTANCE]->data_rx; //Full Duplex Dummy read
 	read_data[0] = sspi_instance[SSPI_INSTANCE]->data_rx; //Full Duplex Dummy read
 	read_data[0] = sspi_instance[SSPI_INSTANCE]->data_rx; //Full Duplex Dummy read
 	read_data[0] = sspi_instance[SSPI_INSTANCE]->data_rx; //Full Duplex Dummy read
 	read_data[0] = sspi_instance[SSPI_INSTANCE]->data_rx; //Full Duplex Dummy read
+#endif	
 	read_data[0] = sspi_instance[SSPI_INSTANCE]->data_rx;
 	read_data[1] = sspi_instance[SSPI_INSTANCE]->data_rx;
 	read_data[2] = sspi_instance[SSPI_INSTANCE]->data_rx;
@@ -318,14 +348,15 @@ int flash_read(int address)
 int flash_device_id(void)
 {
 
-	uint32_t recvData;
+	uint32_t recvData = 0;
+	uint8_t read_data[6] = {'\0'};
 	flash_write_enable();
 #ifdef DISABLE_CS
 	sspi_enable_txrx(sspi_instance[SSPI_INSTANCE], DISABLE);
 #endif
 	sspi_instance[SSPI_INSTANCE]->data_tx = FLASH_READ_DEVICE_ID;		
 #ifdef SPI_HALF_DUPLEX
-	sspi_configure_tx_rx_length(sspi_instance[SSPI_INSTANCE], 8, 24);//Tx - 8, Rx - 24;
+	sspi_configure_tx_rx_length(sspi_instance[SSPI_INSTANCE], 8, 48);//Tx - 8, Rx - 24;
 	sspi_configure_comm_mode(sspi_instance[SSPI_INSTANCE], HALF_DUPLEX);
 #endif
 #ifdef SPI_FULL_DUPLEX
@@ -345,8 +376,24 @@ int flash_device_id(void)
 	//Full duplex dummy read
 	recvData = sspi_instance[SSPI_INSTANCE]->data_rx; //Full Duplex Dummy read
 #endif
-	recvData = (sspi_instance[SSPI_INSTANCE]->data_rx << 16) | \
+//	recvData = (sspi_instance[SSPI_INSTANCE]->data_rx << 16) | \
 	(sspi_instance[SSPI_INSTANCE]->data_rx << 8 ) | (sspi_instance[SSPI_INSTANCE]->data_rx );
+//	printf("\n Device id is %x", recvData);
+/*	read_data[0] = sspi_instance[SSPI_INSTANCE]->data_rx;
+	read_data[1] = sspi_instance[SSPI_INSTANCE]->data_rx;
+	read_data[2] = sspi_instance[SSPI_INSTANCE]->data_rx;
+	read_data[3] = sspi_instance[SSPI_INSTANCE]->data_rx;
+	read_data[4] = sspi_instance[SSPI_INSTANCE]->data_rx;
+	read_data[5] = sspi_instance[SSPI_INSTANCE]->data_rx;
+*/
+
+	for (int i = 0; i < 6; i++)
+	{
+		read_data[i] = sspi_instance[SSPI_INSTANCE]->data_rx;
+		printf("\n data[%x]: %x", i, read_data[i]);
+	}
+
+	recvData = read_data[0] << 16 | read_data[1] << 8 | read_data[2];
 	printf("\n Device id is %x", recvData);
 	return recvData;	
 }

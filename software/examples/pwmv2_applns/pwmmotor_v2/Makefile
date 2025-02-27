@@ -19,9 +19,9 @@
 
 SHELL := /bin/bash # Use bash syntax
 DC ?=
-PROGRAM ?=
+PROGRAM ?= pwmmotor_v2
 #default target board
-TARGET ?= artix7_35t
+TARGET ?= sos
 DEBUG ?=
 MARCH ?= rv32imac
 MABI  ?= ilp32

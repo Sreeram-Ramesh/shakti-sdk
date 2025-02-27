@@ -38,8 +38,7 @@ typedef struct
 	unsigned short reserv0;	 /*! reserved */
 	unsigned int  tx_reg;	 /*! Transmit register -- the value that needs to be tranmitted needs to be written here-32 bits*/
 	unsigned int  rcv_reg;	 /*! Receive register -- the value that received from uart can be read from here --32 bits*/
-	unsigned char  status;	 /*! Status register -- Reads various transmit and receive status - 8 bits*/
-	unsigned char  reserv1;	 /*! reserved */
+	unsigned short  status;	 /*! Status register -- Reads various transmit and receive status - 8 bits*/
 	unsigned short  reserv2; /*! reserved */
 	unsigned short delay;    /*! Delays the transmit with specified clock - 16bits*/
 	unsigned short reserv3;  /*! reserved */

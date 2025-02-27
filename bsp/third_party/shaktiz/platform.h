@@ -19,19 +19,6 @@ platform.h - header file for SoS C class SoC on artix7_100t
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-/*********c-rv64imacsu-100t*********
- SPI   * 2
- GPIO  * 32
- UART  * 3
- I2C   * 2
- PLIC  * 1
- CLINT * 1
- XADC  * 1
- DDR   : 256MB
- Boot
- PWM   * 6
- pinmux
-************************************/
 
 #ifndef PLATFORM_H
 #define PLATFORM_H
@@ -49,6 +36,41 @@ platform.h - header file for SoS C class SoC on artix7_100t
 #define CLINT_DIVISOR   256
 
 #define CLOCK_FREQUENCY 40000000
+
+/*! Selecting Image*/
+#define DEFUALT_MCS 1
+#define IMAGE_1     0
+#define IMAGE_2     0
+#define IMAGE_3     0
+
+#ifdef DEFUALT_MCS 
+#define PWM_MAX_COUNT 6 
+#define SSPI_MAX_COUNT  3 /*! Number of Standard SSPI used in the SOC */ 
+#define MAX_UART_COUNT 2 
+#define MAX_I2C_COUNT 2  
+#endif  //end of defines for DEFUALT_MCS
+
+#ifdef IMAGE_1
+#define PWM_MAX_COUNT 6 
+#define SSPI_MAX_COUNT  3 /*! Number of Standard SSPI used in the SOC */ 
+#define MAX_UART_COUNT 2 
+#define MAX_I2C_COUNT 3  
+#endif //end of defines for IMAGE_1
+
+#ifdef IMAGE_2
+#define PWM_MAX_COUNT 6 
+#define SSPI_MAX_COUNT  3 /*! Number of Standard SSPI used in the SOC */ 
+#define MAX_UART_COUNT 2 
+#define MAX_I2C_COUNT 2
+#endif //end of defines for IMAGE_2
+
+#ifdef IMAGE_3
+#define PWM_MAX_COUNT 3 
+#define SSPI_MAX_COUNT  3 /*! Number of Standard SSPI used in the SOC */ 
+#define MAX_UART_COUNT 3 
+#define MAX_I2C_COUNT 2 
+#endif //end of defines for IMAGE_3
+
 
 /*!Debugger Offset */
 #define DBG_MEM_START 0x00000010
@@ -72,10 +94,10 @@ platform.h - header file for SoS C class SoC on artix7_100t
 /*!Serial Peripheral Interface Offsets */
 #define SPI0_START 0x00020000 /* Serial Peripheral Interface 0 */
 #define SPI1_START 0x00020100 /* Serial Peripheral Interface 1 */
+#define SPI2_START 0x00020200 /* Serial Peripheral Interface 2 */ 
 
 /* Struct to access SSPI registers as 32 bit registers */
 #define SSPI0_BASE_ADDRESS  0x00020000 /*! Standard Serial Peripheral Interface 0 Base address*/
-//#define SSPI0_BASE_ADDRESS  0x00020100 /*! Standard Serial Peripheral Interface 0 Base address*/
 #define SSPI_BASE_OFFSET 0X100
 #define SSPI_MAX_COUNT  2 /*! Number of Standard SSPI used in the SOC */
 
