@@ -31,7 +31,7 @@
 
 /*Use -D compiler flag to set the LOG_LEVEL; default value is 1*/
 #ifndef LOG_LEVEL
-#define LOG_LEVEL 3 
+#define LOG_LEVEL 4
 #endif
 
 /** @fn void log_trace(const char*fmt, ...)

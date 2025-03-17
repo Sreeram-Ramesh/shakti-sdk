@@ -204,6 +204,12 @@ else
 ifeq ($(PROGRAM),hello)
 filepath := uart_applns/hello
 else
+ifeq ($(PROGRAM),RoboticArm)
+filepath := uart_applns/RoboticArm
+else
+ifeq ($(PROGRAM),ColorSensor)
+filepath := uart_applns/ColorSensor
+else
 ifeq ($(PROGRAM),csr_test)
 filepath := uart_applns/csr_test
 else
@@ -493,6 +499,8 @@ ifeq ($(PROGRAM),mcp4921dac_chk)
 filepath := sspi_applns/mcp4921dac_chk
 else
 	@echo "Entry for $(PROGRAM) not present"
+endif
+endif
 endif
 endif
 endif

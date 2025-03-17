@@ -124,12 +124,12 @@ int config_i2c(i2c_struct * instance, unsigned char prescale_div, unsigned char 
 	}
 
 	log_debug("\tWaiting for a specified time\n ");
-	waitfor(900); //1 Second software wait -- Should be 900000 but setting to 900 now since simulation is already slow
+	waitfor(90000); //1 Second software wait -- Should be 900000 but setting to 900 now since simulation is already slow
 	log_debug("\tDone Waiting \n ");
 	log_info("\nControl: %x; Status: %x", instance->control, instance->status);
 	/* Enable Serial Interface */
 	instance->control = I2C_IDLE;
-	waitfor(900); //1 Second software wait -- Should be 900000 but setting to 900 now since simulation is already slow
+	waitfor(9000); //1 Second software wait -- Should be 900000 but setting to 900 now since simulation is already slow
 
 	temp = instance->status;
 

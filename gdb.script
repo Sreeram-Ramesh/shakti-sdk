@@ -23,19 +23,7 @@
 #***************************************************************************/
 set remotetimeout unlimited
 target remote localhost:3333
-#Baud rate 9600
-#set {short}0x11300=325
 #Baud rate 19200
-set {short}0x11300=163
-#Baud rate 37800
 #set {short}0x11300=82
-#Baud rate 57600
-#set {short}0x11300=54
-#Baud rate 115200
-#set {short}0x11300=27
-#Baud rate 230400
-#set {short}0x11300=12
-#Baud rate 460800
-#set {short}0x11300=7
 
 

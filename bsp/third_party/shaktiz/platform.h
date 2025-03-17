@@ -38,10 +38,10 @@ platform.h - header file for SoS C class SoC on artix7_100t
 #define CLOCK_FREQUENCY 40000000
 
 /*! Selecting Image*/
-#define DEFUALT_MCS 1
-#define IMAGE_1     0
-#define IMAGE_2     0
-#define IMAGE_3     0
+// #define DEFUALT_MCS 1
+// #define IMAGE_1     0
+#define IMAGE_2     1
+// #define IMAGE_3     0
 
 #ifdef DEFUALT_MCS 
 #define PWM_MAX_COUNT 6 
