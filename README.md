@@ -1,34 +1,138 @@
-To use this SDK, one needs to have a Ubuntu 16.04 or Ubuntu 18.04. We have not verified on other platforms. The Shakti SDK user manual lists the procedure to program the shakti SoC on Digilent Arty-7 FPGA boards and use the Shakti SDK to write applications. We have also come up with a video tutorial to do the same.
+# SHAKTI-Based Robotic Sorting Arm
 
-List of manuals for using SHAKTI-SDK
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![ISA](https://img.shields.io/badge/ISA-RISC--V-blue.svg)](./)
+[![FPGA](https://img.shields.io/badge/FPGA-Artix--7-purple.svg)](./)
 
-1. [Shakti SDK User Manual](http://shakti.org.in/docs/user_manual.pdf)
-2. [Shakti Boot Sequence](http://shakti.org.in/docs/boot_manual.pdf)
-3. [Shakti PLIC User Manual](http://shakti.org.in/docs/plic_user_manual.pdf)
+A 4-DOF robotic arm that autonomously sorts objects by color, controlled by a SHAKTI RISC-V SoC running on a Xilinx Artix-7 FPGA. This project was developed for the DIR-V 2025 National Hackathon and won **RUNNERS UP** in their flagship **48-hour hardware hackathon** winning us a cash prise of **Rs. 35000**. It showcases a minimalist and efficient approach to robotic automation through clever sensor integration and mechanical design.
 
+### Collaborators
 
-List of Interactive videos to use SHAKTI over Xilinx Arty boards
-
-1. [Programming SHAKTI onto the FPGA boards - Part 1 video](https://www.youtube.com/watch?v=cpGy9iZIrfo)
-2. [Programming SHAKTI onto the FPGA boards - Part 2 video](https://www.youtube.com/watch?v=oYEvvZ-oa1g)
-3. [Steps to install SHAKTI-SDK](https://www.youtube.com/watch?v=hjftmb1Ye2A&t=6s)
-4. [Steps to add a simple application to SHAKTI-SDK](https://www.youtube.com/watch?v=qEoJzhBs9uI)
+* [Ajitessh R](https://github.com/ajitessh) 
+* [Sreeram R](https://github.com/Sreeram-Ramesh)
+* [Vineeth Roshan Premanand](https://github.com/username)
 
 
-* Master branch is the stable one.
-* This repository has example code of many sensors integrated.
-* Please read the manuals and videos completely, before starting development.
+## Key Features & Innovations
 
-## Logging Issue 
+* **RISC-V Control:** Utilizes the open-source SHAKTI C-Class SoC as the central processing unit for all logic, control, and I/O operations.
+* **Dual-Function Sensing:** A single APDS-9960 sensor is used for both object proximity detection (to guide the arm) and color identification (R, G, B), significantly reducing component count and firmware complexity.
+* **Vacuum Suction Gripper:** Employs a vacuum-based gripper instead of a traditional mechanical claw. This results in a lighter, faster, and more reliable design with fewer actuators and failure points.
+* **Custom PCB Controller:** Features a custom-designed 2-layer PCB to cleanly integrate all sensors, servo motors, and power circuits with the main FPGA board.
 
-Any issue or clarification can be raised under issues. <br/>
-Before raising an issue, please check if there are any similar issues.
+## System Architecture
 
-Please follow the below steps to create an issue.
+The system is a multi-disciplinary design combining custom mechanical parts, electronic hardware, and bare-metal firmware.
 
-- Go to [`Issues`](https://gitlab.com/shaktiproject/software/shakti-sdk/issues).
-- After clicking on New Issue you will get an option to select a template.
-- Click on choose template, list of available templates will be displayed, Select template "Bug".
-- Once the template named 'Bug' is selected, the description text box is populated by the template.
-- Please fill all the fields in the description textbox.
+### 1. Mechanical Design
 
+The arm is a 4-DOF (Degrees of Freedom) assembly driven by servo motors. The end-effector is a custom-designed vacuum suction gripper, chosen for its simplicity and speed over a mechanical alternative.
+
+![Mechanical Design](./doc/images/mechanical_design.png)
+
+### 2. Hardware & Electronics
+
+The electronic system is centered around the Nexys Video FPGA board, which hosts the SHAKTI SoC. A custom PCB acts as an interface shield for all external components.
+
+* **Action Item:** Recreate your hand-drawn circuit layout diagram cleanly using a tool like KiCad or Fritzing and add it here.
+
+![System Block Diagram](./doc/images/system_diagram.png)
+
+* **FPGA Board:** Nexys Video (Xilinx Artix-7)
+* **Processor:** SHAKTI C-Class RISC-V SoC
+* **Sensor:** APDS-9960 (I2C interface) for proximity and color
+* **Actuators:** MG995 and MG90S Servo Motors (PWM control)
+* **Gripper:** Kamoer Diaphragm Pump controlled via a relay circuit
+
+### 3. Firmware & Logic
+
+The control application is a bare-metal C program developed using the SHAKTI SDK. The software is responsible for the entire operational flow, from scanning for objects to final placement.
+
+![Firmware Flowchart](./doc/images/flowchart.png)
+
+The core algorithm performs the following steps:
+1.  **Scan:** Executes a pre-programmed "Area Sweep Maneuver" to scan the collection bin for objects using the proximity sensor.
+2.  **Approach & Pick:** Upon detecting an object, the arm positions the gripper and activates the vacuum pump.
+3.  **Identify:** While the object is held, the APDS-9960 sensor determines its color.
+4.  **Sort:** The arm rotates to the corresponding bin for the identified color.
+5.  **Release:** The vacuum is released, dropping the ball.
+6.  **Repeat:** The arm returns to the scanning maneuver until the bin is empty.
+
+### SHAKTI SDK Build and Deploy Workflow
+
+This guide outlines the steps to compile a C application using the SHAKTI SDK, and then load and execute it on the SHAKTI C-Class core running on the Nexys Video FPGA.
+
+### Prerequisites
+
+1.  **SHAKTI SDK:** You have cloned the official SDK and your custom application code is located in the `software/examples/` directory.
+2.  **RISC-V Toolchain:** The `riscv64-unknown-elf` toolchain is installed and in your system's PATH.
+3.  **OpenOCD:** OpenOCD is installed and configured for the Nexys Video board.
+4.  **Hardware:** The FPGA is programmed with the correct SHAKTI C-Class bitstream.
+
+### Step 1: Start the Debug Server (OpenOCD)
+
+This command starts the Open On-Chip Debugger, which creates a GDB server that acts as a bridge between your computer and the JTAG interface of the SHAKTI core on the FPGA.
+
+1.  Open a new terminal.
+2.  Navigate to the board support package directory:
+    ```shell
+    cd shakti-sdk/bsp/third_party/shaktiz
+    ```
+3.  Run OpenOCD with the correct configuration file:
+    ```shell
+    sudo $(which openocd) -f ftdi.cfg
+    ```
+4.  If successful, OpenOCD will be listening for connections. **Do not close this terminal.**
+
+### Step 2: Build the Software Application
+
+This step compiles your C code into an executable RISC-V binary (`.shakti` file).
+
+1.  Open a **second terminal**.
+2.  Navigate to the main SDK directory:
+    ```shell
+    cd /path/to/your/shakti-sdk
+    ```
+3.  Run the `make` command, specifying your application and the target SoC.
+    * `PROGRAM`: The path to your application's C file relative to `software/examples/`.
+    * `TARGET`: The target SoC, which is `shaktiz` for this setup.
+
+    **Example for your Robotic Arm project:**
+    ```shell
+    make software PROGRAM=pwmmotor_v2/RoboticArm TARGET=shaktiz
+    ```
+4.  Verify that the build was successful by checking the `output` directory. It should contain three files: `.dump`, `.o`, and `.shakti`.
+
+### Step 3: Load and Run the Code (GDB)
+
+This step uses the RISC-V GNU Debugger (GDB) to connect to the OpenOCD server, load your compiled program into the FPGA's memory, and start its execution.
+
+1.  In the same terminal as Step 2, launch the debugger:
+    ```shell
+    riscv64-unknown-elf-gdb
+    ```
+2.  Inside the GDB prompt, run the following commands in sequence.
+
+    ```gdb
+    # Set a long timeout to prevent connection issues
+    set remotetimeout 240
+
+    # Connect to the OpenOCD server running on your machine
+    target remote :3333
+
+    # Load your compiled application's symbols and code
+    # NOTE: You load the .shakti file, NOT the .c file.
+    file software/examples/pwmmotor_v2/RoboticArm/output/RoboticArm.shakti
+    load
+
+    # Continue execution (run the program)
+    c
+    ```
+Your program is now running on the RISC-V core.
+
+### Creating a New Project (Case 2)
+
+To create a new application, the simplest method is to:
+1.  Copy an existing example folder (e.g., `gpio`) that is similar to your needs.
+2.  Rename the folder and the `.c` file inside to match your new project name.
+3.  Modify the `Makefile` inside that directory, changing the `src` and `exe` variables to your new project name.
