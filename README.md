@@ -8,9 +8,9 @@ A 4-DOF robotic arm that autonomously sorts objects by color, controlled by a SH
 
 ### Collaborators
 
-* [Ajitessh R](https://github.com/ajitessh) 
+* [Ajitessh R](https://github.com/ElectronicExplorer) 
 * [Sreeram R](https://github.com/Sreeram-Ramesh)
-* [Vineeth Roshan Premanand](https://github.com/username)
+* [Vineeth Roshan Premanand](https://github.com/VineethRoshanP)
 
 
 ## Key Features
