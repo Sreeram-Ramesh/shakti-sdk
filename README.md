@@ -162,6 +162,6 @@ To create a new application, the simplest method is to:
 
 ### Demonstration at the final evaluation at the end of 48-hrs
 
-<a href="https://www.youtube.com/watch?v=qiLszU0Jg18"><div align="center"><img src="./doc/thumbnail.png" width="500" alt="Thumbnail"></div></a>
+[![Robotic Arm Demo](./doc/thumbnail.png)](https://www.youtube.com/watch?v=qiLszU0Jg18)
 
 ---
